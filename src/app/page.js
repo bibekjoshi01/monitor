@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
+import Head from "next/head";
 
 export default function Home() {
   const [underOV, setUnderOV] = useState(false);
