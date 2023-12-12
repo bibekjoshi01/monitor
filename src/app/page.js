@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
-import Head from "next/head";
 
 export default function Home() {
   const [underOV, setUnderOV] = useState(false);
@@ -73,7 +72,7 @@ export default function Home() {
     //   }),
     // });
 
-    const result = await response.json();
+    // const result = await response.json();
     localStorage.setItem("emailSent", "true");
     localStorage.setItem("emailSentTimestamp", Date.now());
   };
@@ -137,31 +136,6 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        {/* Meta tags */}
-        <meta charSet="UTF-8" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        {/* Title and description */}
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-
-        {/* Open Graph tags */}
-        <meta property="og:title" content={metadata.title} />
-        <meta property="og:description" content={metadata.description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={metadata.imageUrl} />
-
-        {/* Twitter tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={metadata.title} />
-        <meta name="twitter:description" content={metadata.description} />
-        <meta name="twitter:image" content={metadata.imageUrl} />
-
-        {/* Fonts */}
-        <style dangerouslySetInnerHTML={{ __html: inter.styles }} />
-      </Head>
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
