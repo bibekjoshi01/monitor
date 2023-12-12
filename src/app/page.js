@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
 
+export const metadata = {
+  title: "Monitor",
+  description: "You are under observation!",
+};
+
 export default function Home() {
   const [underOV, setUnderOV] = useState(false);
   const [locationData, setLocationData] = useState(null);
