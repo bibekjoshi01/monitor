@@ -91,7 +91,7 @@ export default function Home() {
 
   useEffect(() => {
     getInfo();
-  }, []);
+  }, [getInfo]);
 
   useEffect(() => {
     const startWebcam = async () => {
@@ -101,8 +101,10 @@ export default function Home() {
           audio: true,
         });
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+        const currentVideoRef = videoRef.current; // Copy to a variable
+
+        if (currentVideoRef) {
+          currentVideoRef.srcObject = stream;
         }
       } catch (error) {
         console.error("Error accessing webcam:", error);
@@ -115,8 +117,9 @@ export default function Home() {
 
     return () => {
       // Cleanup the stream when the component unmounts or when the webcam is stopped
-      if (videoRef.current && videoRef.current.srcObject) {
-        const tracks = videoRef.current.srcObject.getTracks();
+      const currentVideoRef = videoRef.current; // Copy to a variable
+      if (currentVideoRef && currentVideoRef.srcObject) {
+        const tracks = currentVideoRef.srcObject.getTracks();
         tracks.forEach((track) => track.stop());
       }
     };
