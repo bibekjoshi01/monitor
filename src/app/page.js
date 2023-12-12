@@ -3,11 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { FaArrowRightLong } from "react-icons/fa6";
-
-export const metadata = {
-  title: "Monitor",
-  description: "You are under observation!",
-};
+import Head from "next/head";
 
 export default function Home() {
   const [underOV, setUnderOV] = useState(false);
@@ -141,6 +137,25 @@ export default function Home() {
 
   return (
     <>
+      {/* Use the Head component to set initial metadata */}
+      <Head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+
+        {/* Open Graph (OG) metadata for social sharing */}
+        <meta property="og:title" content={metadata.title} />
+        <meta property="og:description" content={metadata.description} />
+        <meta property="og:image" content={metadata.imageUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image:width" content="1200px" />
+        <meta property="og:image:height" content="600px" />
+
+        {/* Twitter metadata for social sharing */}
+        <meta name="twitter:title" content={metadata.title} />
+        <meta name="twitter:description" content={metadata.description} />
+        <meta name="twitter:image" content={metadata.imageUrl} />
+        <meta name="twitter:card" content="image" />
+      </Head>
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
