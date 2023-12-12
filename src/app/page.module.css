@@ -18,7 +18,7 @@
   line-height: 1.2rem;
   max-width: var(--max-width);
   width: 100%;
-  z-index: 2;
+  z-index: 100;
   font-family: var(--font-mono);
 }
 

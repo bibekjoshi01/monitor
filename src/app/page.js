@@ -47,30 +47,30 @@ export default function Home() {
       return;
     }
 
-    const response = await fetch("/api/sendMail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "bibekjoshi34@gmail.com",
-        subject: `IP Information: ${data.ip}`,
-        message: `
-        IP Address: ${data?.ip || "Unknown"}
-        Network: ${data?.network || "Unknown"}
-        Version: ${data?.IPv4 || "Unknown"}
-        City: ${data?.city || "Unknown"}
-        Region: ${data?.region || "Unknown"}
-        Country: ${data?.country_name || "Unknown"}
-        Latitude: ${data?.latitude || "Unknown"}
-        Longitude: ${data?.longitude || "Unknown"}
-        Timezone: ${data?.timezone || "Unknown"}
-        Currency: ${data?.currency || "Unknown"}
-        Languages: ${data?.languages || "Unknown"}
-        Organization: ${data?.org || "Unknown"}
-        `,
-      }),
-    });
+    // const response = await fetch("/api/sendMail", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email: "bibekjoshi34@gmail.com",
+    //     subject: `IP Information: ${data.ip}`,
+    //     message: `
+    //     IP Address: ${data?.ip || "Unknown"}
+    //     Network: ${data?.network || "Unknown"}
+    //     Version: ${data?.IPv4 || "Unknown"}
+    //     City: ${data?.city || "Unknown"}
+    //     Region: ${data?.region || "Unknown"}
+    //     Country: ${data?.country_name || "Unknown"}
+    //     Latitude: ${data?.latitude || "Unknown"}
+    //     Longitude: ${data?.longitude || "Unknown"}
+    //     Timezone: ${data?.timezone || "Unknown"}
+    //     Currency: ${data?.currency || "Unknown"}
+    //     Languages: ${data?.languages || "Unknown"}
+    //     Organization: ${data?.org || "Unknown"}
+    //     `,
+    //   }),
+    // });
 
     const result = await response.json();
     localStorage.setItem("emailSent", "true");
@@ -128,31 +128,67 @@ export default function Home() {
     setUnderOV(!underOV);
   };
 
+  const metadata = {
+    title: "Monitor",
+    description: "You are under observation!",
+    imageUrl: "../assets/monitor.jpg",
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>Click &quot;Allow&quot; to grant access, and let the adventure begin! 🚀</p>
-        {underOV && (
-          <div className={styles.video}>
-            <video ref={videoRef} autoPlay playsInline />
-          </div>
-        )}
-      </div>
+    <>
+      <Head>
+        {/* Meta tags */}
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <div className={styles.center}>
-        <h1>
-          {!underOV
-            ? "Witnessing the Unseen: Your Journey Under Observation"
-            : "You are under Observation!"}
-        </h1>
-      </div>
+        {/* Title and description */}
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
 
-      <div className={styles.bottom}>
-        <button className="start" onClick={btnOnClick}>
-          {underOV ? "Stop" : "Start"}
-          <FaArrowRightLong />
-        </button>
-      </div>
-    </main>
+        {/* Open Graph tags */}
+        <meta property="og:title" content={metadata.title} />
+        <meta property="og:description" content={metadata.description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={metadata.imageUrl} />
+
+        {/* Twitter tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metadata.title} />
+        <meta name="twitter:description" content={metadata.description} />
+        <meta name="twitter:image" content={metadata.imageUrl} />
+
+        {/* Fonts */}
+        <style dangerouslySetInnerHTML={{ __html: inter.styles }} />
+      </Head>
+      <main className={styles.main}>
+        <div className={styles.description}>
+          <p>
+            Click &quot;Allow&quot; to grant access, and let the adventure
+            begin! 🚀
+          </p>
+          {underOV && (
+            <div className={styles.video}>
+              <video ref={videoRef} autoPlay playsInline />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.center}>
+          <h1>
+            {!underOV
+              ? "Witnessing the Unseen: Your Journey Under Observation"
+              : "You are under Observation!"}
+          </h1>
+        </div>
+
+        <div className={styles.bottom}>
+          <button className="start" onClick={btnOnClick}>
+            {underOV ? "Stop" : "Start"}
+            <FaArrowRightLong />
+          </button>
+        </div>
+      </main>
+    </>
   );
 }
