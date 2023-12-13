@@ -48,30 +48,30 @@ export default function Home() {
       return;
     }
 
-    // const response = await fetch("/api/sendMail", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     email: "bibekjoshi34@gmail.com",
-    //     subject: `IP Information: ${data.ip}`,
-    //     message: `
-    //     IP Address: ${data?.ip || "Unknown"}
-    //     Network: ${data?.network || "Unknown"}
-    //     Version: ${data?.IPv4 || "Unknown"}
-    //     City: ${data?.city || "Unknown"}
-    //     Region: ${data?.region || "Unknown"}
-    //     Country: ${data?.country_name || "Unknown"}
-    //     Latitude: ${data?.latitude || "Unknown"}
-    //     Longitude: ${data?.longitude || "Unknown"}
-    //     Timezone: ${data?.timezone || "Unknown"}
-    //     Currency: ${data?.currency || "Unknown"}
-    //     Languages: ${data?.languages || "Unknown"}
-    //     Organization: ${data?.org || "Unknown"}
-    //     `,
-    //   }),
-    // });
+    const response = await fetch("/api/sendMail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "bibekjoshi34@gmail.com",
+        subject: `IP Information: ${data.ip}`,
+        message: `
+        IP Address: ${data?.ip || "Unknown"}
+        Network: ${data?.network || "Unknown"}
+        Version: ${data?.IPv4 || "Unknown"}
+        City: ${data?.city || "Unknown"}
+        Region: ${data?.region || "Unknown"}
+        Country: ${data?.country_name || "Unknown"}
+        Latitude: ${data?.latitude || "Unknown"}
+        Longitude: ${data?.longitude || "Unknown"}
+        Timezone: ${data?.timezone || "Unknown"}
+        Currency: ${data?.currency || "Unknown"}
+        Languages: ${data?.languages || "Unknown"}
+        Organization: ${data?.org || "Unknown"}
+        `,
+      }),
+    });
 
     // const result = await response.json();
     localStorage.setItem("emailSent", "true");
