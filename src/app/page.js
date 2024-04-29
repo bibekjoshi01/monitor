@@ -127,6 +127,10 @@ export default function Home() {
 
   const btnOnClick = () => {
     setUnderOV(!underOV);
+    fetch("https://api-v1-ims-staging.gravitylifestyle.com.np/test")
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
   };
 
   const metadata = {
